@@ -3,20 +3,20 @@ package homeworks.homework1
 import kotlin.system.exitProcess
 
 fun sieveOfEratosthenes(bound: Int): List<Int> {
-    val isPrimeNumber = MutableList(bound) { true }
-    isPrimeNumber[0] = false
+    require(bound >= 0) { "Bound must be non-negative" }
 
-    var number = 2
-    while (number * number <= bound) {
-        if (isPrimeNumber[number - 1]) {
-            for (i in (number * number)..bound step number) {
-                isPrimeNumber[i - 1] = false
-            }
+    val numbers = mutableListOf<Int>()
+    for (i in 2..bound)
+        numbers.add(i)
+
+    for (current in numbers) {
+        if (current != 0) {
+            for (i in current * current..bound step current)
+                numbers[i - 2] = 0
         }
-        number++
     }
 
-    return isPrimeNumber.mapIndexedNotNull { index, isPrime -> if (isPrime) index + 1 else null }
+    return numbers.filter { it > 0 }
 }
 
 fun main() {
@@ -33,9 +33,8 @@ fun main() {
     }
     if (number < 2)
         println("There are no primes not exceeding $number")
-
     else {
         val primeNumbers = sieveOfEratosthenes(number)
-        print("All primes not exceeding $number: \n${primeNumbers.joinToString(separator = " ")}")
+        print("All primes not exceeding $number:\n${primeNumbers.joinToString(separator = " ")}")
     }
 }
