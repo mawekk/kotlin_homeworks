@@ -26,6 +26,7 @@ internal class Task2Test {
 
     @Test
     fun `negative bound`() {
-        assertThrows<IllegalArgumentException> { sieveOfEratosthenes(-1) }
+        val exception = assertThrows<IllegalArgumentException> { sieveOfEratosthenes(-1) }
+        assertEquals("Bound must be non-negative", exception.message)
     }
 }

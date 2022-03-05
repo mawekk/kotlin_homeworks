@@ -5,14 +5,13 @@ import kotlin.system.exitProcess
 fun sieveOfEratosthenes(bound: Int): List<Int> {
     require(bound >= 0) { "Bound must be non-negative" }
 
-    val numbers = mutableListOf<Int>()
-    for (i in 2..bound)
-        numbers.add(i)
+    val numbers = (2..bound).toMutableList()
 
     for (current in numbers) {
         if (current != 0) {
-            for (i in current * current..bound step current)
+            for (i in (current * current)..bound step current) {
                 numbers[i - 2] = 0
+            }
         }
     }
 
@@ -35,6 +34,7 @@ fun main() {
         println("There are no primes not exceeding $number")
     else {
         val primeNumbers = sieveOfEratosthenes(number)
-        print("All primes not exceeding $number:\n${primeNumbers.joinToString(separator = " ")}")
+        println("All primes not exceeding $number:")
+        println(primeNumbers.joinToString(separator = " "))
     }
 }
