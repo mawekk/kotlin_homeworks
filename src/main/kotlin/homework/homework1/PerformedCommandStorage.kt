@@ -1,6 +1,6 @@
 package homework.homework1
 
-internal class Action(val name: String, first: Int, second: Int) {
+class Action(val name: String, first: Int?, second: Int?) {
     val firstParameter = first
     val secondParameter = second
 }
@@ -9,8 +9,7 @@ class PerformedCommandStorage {
     private var storage: MutableList<Action> = mutableListOf()
     private var userList: MutableList<Int> = mutableListOf()
 
-    fun newAction(name: String, first: Int, second: Int) {
-        val action = Action(name, first, second)
+    fun newAction(action: Action) {
         when (action.name) {
             "add" -> add(action.firstParameter)
             "append" -> append(action.firstParameter)
@@ -24,16 +23,25 @@ class PerformedCommandStorage {
         println("Result: ${userList.joinToString(separator = " ")}")
     }
 
-    private fun add(element: Int) {
+    private fun add(element: Int?) {
+        if (element == null) {
+            throw IllegalArgumentException("wrong argument")
+        }
         userList.add(0, element)
     }
 
-    private fun append(element: Int) {
+    private fun append(element: Int?) {
+        if (element == null) {
+            throw IllegalArgumentException("wrong argument")
+        }
         userList.add(element)
     }
 
-    private fun swap(first: Int, second: Int) {
-        if ((second >= userList.size) or (first < 0) or (second < 0)) {
+    private fun swap(first: Int?, second: Int?) {
+        if ((first == null) or (second == null)) {
+            throw IllegalArgumentException("wrong argument")
+        }
+        if ((second!! >= userList.size) or (first!! < 0) or (second < 0)) {
             throw IllegalArgumentException("this position does not exist")
         }
         val buffer = userList[first]

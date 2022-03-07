@@ -15,6 +15,14 @@ fun main() {
         print("Your command: ")
         command = readln().split(" ")
         if (command[0] == "exit") break
-        storage.newAction(command[0], command.elementAtOrElse(1) { "-1" }.toInt(), command.elementAtOrElse(2) { "-1" }.toInt())
+        val name = command[0]
+        val first = command.elementAtOrElse(1) { "" }.toIntOrNull()
+        val second = command.elementAtOrElse(2) { "" }.toIntOrNull()
+        try {
+            storage.newAction(Action(name, first, second))
+        }
+        catch (exception: IllegalArgumentException) {
+            println("Failed: ${exception.message}")
+        }
     }
 }
