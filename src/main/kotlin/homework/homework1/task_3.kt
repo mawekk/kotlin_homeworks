@@ -20,8 +20,7 @@ fun main() {
         val second = command.elementAtOrElse(2) { "" }.toIntOrNull()
         try {
             storage.newAction(Action(name, first, second))
-        }
-        catch (exception: IllegalArgumentException) {
+        } catch (exception: IllegalArgumentException) {
             println("Failed: ${exception.message}")
         }
     }
