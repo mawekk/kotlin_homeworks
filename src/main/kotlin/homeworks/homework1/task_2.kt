@@ -7,10 +7,10 @@ fun sieveOfEratosthenes(bound: Int): List<Int> {
 
     val numbers = (2..bound).toMutableList()
 
-    for (current in numbers) {
+    numbers.forEach { current ->
         if (current != 0) {
-            for (i in (current * current)..bound step current) {
-                numbers[i - 2] = 0
+            ((current * current)..bound step current).forEach {
+                numbers[it - 2] = 0
             }
         }
     }
