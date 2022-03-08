@@ -1,9 +1,6 @@
 package homework.homework1
 
-class Action(val name: String, first: Int?, second: Int?) {
-    val firstParameter = first
-    val secondParameter = second
-}
+class Action(val name: String, val firstParameter: Int?, val secondParameter: Int?)
 
 class PerformedCommandStorage {
     private var storage: MutableList<Action> = mutableListOf()
