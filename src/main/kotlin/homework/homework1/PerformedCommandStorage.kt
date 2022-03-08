@@ -9,7 +9,7 @@ class PerformedCommandStorage {
     private var storage: MutableList<Action> = mutableListOf()
     private var userList: MutableList<Int> = mutableListOf()
 
-    fun newAction(action: Action) {
+    fun newAction(action: Action): List<Int> {
         when (action.name) {
             "add" -> add(action.firstParameter)
             "append" -> append(action.firstParameter)
@@ -20,7 +20,7 @@ class PerformedCommandStorage {
         if (action.name != "undo") {
             storage.add(action)
         }
-        println("Result: ${userList.joinToString(separator = " ")}")
+        return userList
     }
 
     private fun add(element: Int?) {

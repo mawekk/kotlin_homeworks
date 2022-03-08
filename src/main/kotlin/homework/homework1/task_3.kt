@@ -19,7 +19,7 @@ fun main() {
         val first = command.elementAtOrElse(1) { "" }.toIntOrNull()
         val second = command.elementAtOrElse(2) { "" }.toIntOrNull()
         try {
-            storage.newAction(Action(name, first, second))
+            println("Result: ${storage.newAction(Action(name, first, second)).joinToString(separator = " ")}")
         } catch (exception: IllegalArgumentException) {
             println("Failed: ${exception.message}")
         }
