@@ -7,6 +7,7 @@ fun main() {
         • append x – add an element x to the end of the list
         • swap i j  – move an element from i to j position
         • undo – cancel the last action 
+        • print – print list
         • exit – bye :("""
     println(greeting)
     var command: List<String>
@@ -15,13 +16,13 @@ fun main() {
         print("Your command: ")
         command = readln().split(" ")
         if (command[0] == "exit") break
-        val name = command[0]
-        val first = command.elementAtOrElse(1) { "" }.toIntOrNull()
-        val second = command.elementAtOrElse(2) { "" }.toIntOrNull()
         try {
-            println("Result: ${storage.newAction(Action(name, first, second)).joinToString(separator = " ")}")
+            val action = wrapAction(command)
+            val list = storage.newAction(action)
+            println("Result: ${list.joinToString(separator = " ")}")
         } catch (exception: IllegalArgumentException) {
             println("Failed: ${exception.message}")
         }
     }
 }
+
