@@ -21,7 +21,6 @@ fun wrapAction(command: List<String>): Action {
     if (type?.nParameters != parameters.size)
         throw IllegalArgumentException("wrong argument")
     return Action(type!!, parameters)
-
 }
 
 class PerformedCommandStorage {
