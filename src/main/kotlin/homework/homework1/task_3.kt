@@ -10,18 +10,21 @@ fun main() {
         • print – print list
         • exit – bye :("""
     println(greeting)
-    var command: List<String>
     val storage = PerformedCommandStorage()
     while (true) {
         print("Your command: ")
-        command = readln().split(" ")
+        val command: List<String> = readln().split(" ")
         if (command[0] == "exit") break
-        try {
-            val action = wrapAction(command)
-            val list = storage.newAction(action)
-            println("Result: ${list.joinToString(separator = " ")}")
-        } catch (exception: IllegalArgumentException) {
-            println("Failed: ${exception.message}")
+        if (command[0] == "print") println("Result: ${storage.returnList().joinToString(separator = " ")}")
+        else {
+            try {
+                val action = wrapAction(command)
+                storage.newAction(action)
+                val list = storage.returnList()
+                println("Result: ${list.joinToString(separator = " ")}")
+            } catch (exception: IllegalArgumentException) {
+                println("Failed: ${exception.message}")
+            }
         }
     }
 }
