@@ -1,8 +1,7 @@
 package homework.homework1
 
 enum class ActionType(val actionName: String, val nParameters: Int) {
-    ADD("add", 1), APPEND("append", 1), MOVE("move", 2),
-    UNDO("undo", 0)
+    ADD("add", 1), APPEND("append", 1), MOVE("move", 2)
 }
 
 open class Action(val type: ActionType) {
@@ -47,8 +46,6 @@ class MoveAction(parameters: List<Int>) : Action(ActionType.MOVE) {
     }
 }
 
-class UndoAction : Action(ActionType.UNDO)
-
 fun wrapAction(command: List<String>): Action {
     val name = command[0]
     val parameters = command.mapNotNull { it.toIntOrNull() }
@@ -60,7 +57,6 @@ fun wrapAction(command: List<String>): Action {
         "add" -> AddAction(parameters)
         "append" -> AppendAction(parameters)
         "move" -> MoveAction(parameters)
-        "undo" -> UndoAction()
         else -> throw IllegalArgumentException("unknown command")
     }
 }

@@ -13,7 +13,7 @@ internal class Task3KtTest {
     fun `add test`(command: String, expected: List<Int>) {
         val storage = PerformedCommandStorage()
         val add = wrapAction(command.split(" "))
-        storage.newAction(add)
+        storage.applyAction(add)
         assertEquals(expected, storage.returnList())
     }
 
@@ -22,7 +22,7 @@ internal class Task3KtTest {
     fun `append test`(command: String, expected: List<Int>) {
         val storage = PerformedCommandStorage()
         val append = wrapAction(command.split(" "))
-        storage.newAction(append)
+        storage.applyAction(append)
         assertEquals(expected, storage.returnList())
     }
 
@@ -30,11 +30,11 @@ internal class Task3KtTest {
     @MethodSource("inputForMove")
     fun `move test`(command: String, expected: List<Int>) {
         val storage = PerformedCommandStorage()
-        storage.newAction(AddAction(listOf(3)))
-        storage.newAction(AddAction(listOf(2)))
-        storage.newAction(AddAction(listOf(1)))
+        storage.applyAction(AddAction(listOf(3)))
+        storage.applyAction(AddAction(listOf(2)))
+        storage.applyAction(AddAction(listOf(1)))
         val move = wrapAction(command.split(" "))
-        storage.newAction(move)
+        storage.applyAction(move)
         assertEquals(expected, storage.returnList())
     }
 
@@ -49,11 +49,11 @@ internal class Task3KtTest {
     @MethodSource("inputForUndo")
     fun `undo test`(lastAction: String, expected: List<Int>) {
         val storage = PerformedCommandStorage()
-        storage.newAction(AddAction(listOf(3)))
-        storage.newAction(AddAction(listOf(2)))
-        storage.newAction(AddAction(listOf(1)))
-        storage.newAction(wrapAction(lastAction.split(" ")))
-        storage.newAction(UndoAction())
+        storage.applyAction(AddAction(listOf(3)))
+        storage.applyAction(AddAction(listOf(2)))
+        storage.applyAction(AddAction(listOf(1)))
+        storage.applyAction(wrapAction(lastAction.split(" ")))
+        storage.undoAction()
         assertEquals(expected, storage.returnList())
     }
 
@@ -73,7 +73,7 @@ internal class Task3KtTest {
     fun `move exception`() {
         val storage = PerformedCommandStorage()
         val exception = assertThrows<IllegalArgumentException> {
-            storage.newAction(
+            storage.applyAction(
                 (MoveAction(listOf(1, 2)))
             )
         }
@@ -83,9 +83,7 @@ internal class Task3KtTest {
     @Test
     fun `undo exception`() {
         val storage = PerformedCommandStorage()
-        val exception = assertThrows<IllegalArgumentException> {
-            storage.newAction(Action(ActionType.UNDO))
-        }
+        val exception = assertThrows<IllegalArgumentException> { storage.undoAction() }
         assertEquals("nothing to undo", exception.message)
     }
 
@@ -116,7 +114,6 @@ internal class Task3KtTest {
             Arguments.of("add 1", ActionType.ADD),
             Arguments.of("append 2", ActionType.APPEND),
             Arguments.of("move 3 4", ActionType.MOVE),
-            Arguments.of("undo", ActionType.UNDO),
         )
 
         @JvmStatic
@@ -124,7 +121,6 @@ internal class Task3KtTest {
             Arguments.of("add 1", listOf(1, 2, 3)),
             Arguments.of("append 2", listOf(1, 2, 3)),
             Arguments.of("move 0 1", listOf(1, 2, 3)),
-            Arguments.of("undo", listOf(3)),
         )
     }
 }
