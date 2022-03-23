@@ -17,11 +17,11 @@ fun main() {
         val command: List<String> = readln().split(" ")
         when (command[0]) {
             "exit" -> break
-            "print" -> println("Result: ${storage.returnList().joinToString(separator = " ")}")
+            "print" -> println("Result: ${storage.list.joinToString(separator = " ")}")
             "undo" -> {
                 try {
                     storage.undoAction()
-                    println("Result: ${storage.returnList().joinToString(separator = " ")}")
+                    println("Result: ${storage.list.joinToString(separator = " ")}")
                 } catch (exception: IllegalArgumentException) {
                     println("Failed: ${exception.message}")
                 }
@@ -30,8 +30,7 @@ fun main() {
                 try {
                     val action = wrapAction(command)
                     storage.applyAction(action)
-                    val list = storage.returnList()
-                    println("Result: ${list.joinToString(separator = " ")}")
+                    println("Result: ${storage.list.joinToString(separator = " ")}")
                 } catch (exception: IllegalArgumentException) {
                     println("Failed: ${exception.message}")
                 }

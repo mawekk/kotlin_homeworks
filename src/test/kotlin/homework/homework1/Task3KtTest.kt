@@ -14,7 +14,7 @@ internal class Task3KtTest {
         val storage = PerformedCommandStorage()
         val add = wrapAction(command.split(" "))
         storage.applyAction(add)
-        assertEquals(expected, storage.returnList())
+        assertEquals(expected, storage.list)
     }
 
     @ParameterizedTest(name = "case {index}: {2} {1}")
@@ -23,7 +23,7 @@ internal class Task3KtTest {
         val storage = PerformedCommandStorage()
         val append = wrapAction(command.split(" "))
         storage.applyAction(append)
-        assertEquals(expected, storage.returnList())
+        assertEquals(expected, storage.list)
     }
 
     @ParameterizedTest(name = "case {index}: {2} {1}")
@@ -35,7 +35,7 @@ internal class Task3KtTest {
         storage.applyAction(AddAction(listOf(1)))
         val move = wrapAction(command.split(" "))
         storage.applyAction(move)
-        assertEquals(expected, storage.returnList())
+        assertEquals(expected, storage.list)
     }
 
     @ParameterizedTest(name = "case {index}: {2} {1}")
@@ -54,7 +54,7 @@ internal class Task3KtTest {
         storage.applyAction(AddAction(listOf(1)))
         storage.applyAction(wrapAction(lastAction.split(" ")))
         storage.undoAction()
-        assertEquals(expected, storage.returnList())
+        assertEquals(expected, storage.list)
     }
 
     @Test
