@@ -8,7 +8,7 @@ fun main() {
         • swap i j  – move an element from i to j position
         • undo – cancel the last action 
         • print – print list
-        • exit – bye :("""
+        • exit – bye :(""".trimIndent()
     println(greeting)
     val storage = PerformedCommandStorage()
     while (true) {
