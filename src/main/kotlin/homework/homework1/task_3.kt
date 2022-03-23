@@ -8,7 +8,8 @@ fun main() {
         • swap i j  – move an element from i to j position
         • undo – cancel the last action 
         • print – print list
-        • exit – bye :(""".trimIndent()
+        • exit – bye :("""
+        .trimIndent()
     println(greeting)
     val storage = PerformedCommandStorage()
     while (true) {
@@ -33,8 +34,8 @@ fun main() {
                     println("Result: ${list.joinToString(separator = " ")}")
                 } catch (exception: IllegalArgumentException) {
                     println("Failed: ${exception.message}")
+                }
             }
         }
     }
-}
 }
