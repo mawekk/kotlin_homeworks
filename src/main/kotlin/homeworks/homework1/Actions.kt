@@ -1,4 +1,4 @@
-package homework.homework1
+package homeworks.homework1
 
 enum class ActionType(val actionName: String, val nParameters: Int) {
     ADD("add", 1), APPEND("append", 1), MOVE("move", 2)
