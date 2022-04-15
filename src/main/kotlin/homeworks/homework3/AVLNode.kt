@@ -2,8 +2,13 @@ package homeworks.homework3
 
 import kotlin.math.max
 
+class AVLNode<K : Comparable<K>, V>(key: K, value: V) : MutableMap.MutableEntry<K, V> {
 
-class AVLNode <K : Comparable<K>, V> (key: K, value: V) : MutableMap.MutableEntry<K, V> {
+    companion object {
+        const val leftRotationCase = 2
+        const val rightRotationCase = -2
+    }
+
     var leftChild: AVLNode<K, V>? = null
     var rightChild: AVLNode<K, V>? = null
     var height = 0
@@ -49,17 +54,18 @@ class AVLNode <K : Comparable<K>, V> (key: K, value: V) : MutableMap.MutableEntr
 
     fun balance(): AVLNode<K, V> {
         updateHeight()
-        if (getBalanceFactor() == 2 && rightChild != null) {
-            if (rightChild!!.getBalanceFactor() < 0)
-                rightChild = rightChild!!.rotateRight()
-            return rotateLeft()
+        return when (getBalanceFactor()) {
+            leftRotationCase -> {
+                if (rightChild!!.getBalanceFactor() < 0)
+                    rightChild = rightChild!!.rotateRight()
+                rotateLeft()
+            }
+            rightRotationCase -> {
+                if (leftChild!!.getBalanceFactor() > 0)
+                    leftChild = leftChild!!.rotateLeft()
+                rotateRight()
+            }
+            else -> this
         }
-        if (getBalanceFactor() == -2 && leftChild != null) {
-            if (leftChild!!.getBalanceFactor() > 0)
-                leftChild = leftChild!!.rotateLeft()
-            return rotateRight()
-        }
-        return this
     }
-
 }
