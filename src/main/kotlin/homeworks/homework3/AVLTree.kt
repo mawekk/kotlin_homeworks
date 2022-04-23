@@ -34,7 +34,7 @@ class AVLTree<K : Comparable<K>, V> : MutableMap<K, V> {
             size++
             return AVLNode(key, value)
         } else
-            when  {
+            when {
                 key > node.key -> node.rightChild = putNode(node.rightChild, key, value)
                 key < node.key -> node.leftChild = putNode(node.leftChild, key, value)
                 else -> node.value = value
