@@ -52,10 +52,33 @@ class AVLTree<K : Comparable<K>, V> : MutableMap<K, V> {
         from.forEach { (put(it.key, it.value)) }
     }
 
+    private fun removeNode(node: AVLNode<K, V>?, key: K): AVLNode<K, V>? {
+        if (node != null) {
+            when {
+                key > node.key -> node.rightChild = removeNode(node.rightChild, key)
+                key < node.key -> node.leftChild = removeNode(node.leftChild, key)
+                else -> {
+                    return if (node.rightChild == null)
+                        node.leftChild
+                    else {
+                        val right = node.rightChild
+                        val left = node.leftChild
+                        val minimum = right?.findMinNode()
+                        minimum?.rightChild = right?.removeMinNode()
+                        minimum?.leftChild = left
+                        minimum?.balance()
+                    }
+                }
+            }
+        }
+        return node?.balance()
+    }
+
     override fun remove(key: K): V? {
+        root = removeNode(root, key)
         size--
 
-        return root?.removeNode(key)?.value
+        return root?.value
     }
 
     private fun traverse(node: AVLNode<K, V>?): MutableSet<MutableMap.MutableEntry<K, V>> {
@@ -84,7 +107,7 @@ class AVLTree<K : Comparable<K>, V> : MutableMap<K, V> {
             splitIntoStrings(node.leftChild, level + 1, list)
             splitIntoStrings(node.rightChild, level + 1, list)
         } else
-            list[level].add("_")
+            list[level].add("")
         return list
     }
 
@@ -116,7 +139,7 @@ class AVLTree<K : Comparable<K>, V> : MutableMap<K, V> {
                 if (indentLeft == 0)
                     indentLeft = 1
                 indent = " ".repeat(length * indentBetween)
-                print(string.padEnd(length).replace("_", "") + indent)
+                print(string.padEnd(length) + indent)
             }
             println()
             println()

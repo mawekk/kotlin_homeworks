@@ -85,32 +85,16 @@ class AVLNode<K : Comparable<K>, V>(override var key: K, override var value: V) 
         }
     }
 
-    private fun findMinNode(): AVLNode<K, V>? {
-        return this.leftChild?.findMinNode()
+    fun findMinNode(): AVLNode<K, V>? {
+        if (leftChild != null)
+            return leftChild?.findMinNode()
+        return this
     }
 
-    private fun removeMinNode(): AVLNode<K, V>? {
+    fun removeMinNode(): AVLNode<K, V>? {
         if (leftChild == null)
             return rightChild
         leftChild = leftChild?.removeMinNode()
-        return balance()
-    }
-
-    fun removeNode(key: K): AVLNode<K, V>? {
-        when {
-            key > this.key -> rightChild?.findNode(key)
-            key < this.key -> leftChild?.findNode(key)
-            else -> {
-                return if (rightChild == null)
-                    leftChild
-                else {
-                    val minimum = rightChild?.findMinNode()
-                    minimum?.rightChild = rightChild?.removeMinNode()
-                    minimum?.leftChild = leftChild
-                    minimum?.balance()
-                }
-            }
-        }
         return balance()
     }
 
