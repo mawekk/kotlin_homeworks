@@ -6,7 +6,8 @@ import kotlin.math.pow
 class AVLTree<K : Comparable<K>, V> : MutableMap<K, V> {
     private var root: AVLNode<K, V>? = null
 
-    override var entries: MutableSet<MutableMap.MutableEntry<K, V>> = mutableSetOf()
+    override val entries: MutableSet<MutableMap.MutableEntry<K, V>>
+        get() = traverse(root)
     override val keys: MutableSet<K> = mutableSetOf()
     override val values: MutableCollection<V> = mutableSetOf()
     override var size: Int = 0
@@ -17,7 +18,6 @@ class AVLTree<K : Comparable<K>, V> : MutableMap<K, V> {
     }
 
     override fun containsValue(value: V): Boolean {
-        entries = traverse(root)
         return entries.find { it.value == value } != null
     }
 
@@ -37,7 +37,7 @@ class AVLTree<K : Comparable<K>, V> : MutableMap<K, V> {
             when {
                 key > node.key -> node.rightChild = putNode(node.rightChild, key, value)
                 key < node.key -> node.leftChild = putNode(node.leftChild, key, value)
-                else -> node.value = value
+                else -> node.setValue(value)
             }
         return node.balance()
     }
@@ -120,7 +120,6 @@ class AVLTree<K : Comparable<K>, V> : MutableMap<K, V> {
         strings.removeLast()
         var length = 0
 
-        entries = traverse(root)
         entries.forEach {
             val node = AVLNode(it.key, it.value)
             if (node.toString().length > length)
