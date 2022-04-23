@@ -2,6 +2,7 @@ package homeworks.homework3
 
 import kotlin.math.max
 
+@Suppress("TooManyFunctions")
 class AVLNode<K : Comparable<K>, V>(override var key: K, override var value: V) : MutableMap.MutableEntry<K, V> {
 
     companion object {
@@ -100,12 +101,14 @@ class AVLNode<K : Comparable<K>, V>(override var key: K, override var value: V) 
             1 -> rightChild?.removeNode(key)?.balance()
             -1 -> leftChild?.removeNode(key)?.balance()
             else -> {
-                if (rightChild == null)
-                    return leftChild
-                val minimum = rightChild?.findMinNode()
-                minimum?.rightChild = rightChild?.removeMinNode()
-                minimum?.leftChild = leftChild
-                return minimum?.balance()
+                return if (rightChild == null)
+                    leftChild
+                else {
+                    val minimum = rightChild?.findMinNode()
+                    minimum?.rightChild = rightChild?.removeMinNode()
+                    minimum?.leftChild = leftChild
+                    minimum?.balance()
+                }
             }
         }
         return balance()

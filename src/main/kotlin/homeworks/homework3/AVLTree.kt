@@ -2,6 +2,7 @@ package homeworks.homework3
 
 import kotlin.math.pow
 
+@Suppress("TooManyFunctions")
 class AVLTree<K : Comparable<K>, V> : MutableMap<K, V> {
     private var root: AVLNode<K, V>? = null
 
@@ -101,7 +102,7 @@ class AVLTree<K : Comparable<K>, V> : MutableMap<K, V> {
             if (it.value.toString().length > length)
                 length = it.value.toString().length
         }
-        length += 5
+        length += height
         for (i in 0 until strings.size) {
             var indent = " ".repeat(length * (2.0.pow(height - i - 1) - 1).toInt())
             print(indent)
