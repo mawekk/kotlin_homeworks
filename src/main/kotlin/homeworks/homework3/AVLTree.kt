@@ -34,9 +34,9 @@ class AVLTree<K : Comparable<K>, V> : MutableMap<K, V> {
             size++
             return AVLNode(key, value)
         } else
-            when (key.compareTo(node.key)) {
-                1 -> node.rightChild = putNode(node.rightChild, key, value)
-                -1 -> node.leftChild = putNode(node.leftChild, key, value)
+            when  {
+                key > node.key -> node.rightChild = putNode(node.rightChild, key, value)
+                key < node.key -> node.leftChild = putNode(node.leftChild, key, value)
                 else -> node.value = value
             }
         return node.balance()
@@ -99,17 +99,26 @@ class AVLTree<K : Comparable<K>, V> : MutableMap<K, V> {
 
         entries = traverse(root)
         entries.forEach {
-            if (it.value.toString().length > length)
-                length = it.value.toString().length
+            val node = AVLNode(it.key, it.value)
+            if (node.toString().length > length)
+                length = node.toString().length
         }
-        length += height
-        for (i in 0 until strings.size) {
-            var indent = " ".repeat(length * (2.0.pow(height - i - 1) - 1).toInt())
+
+        var indentLeft = (2.0.pow(height - 1) - 1).toInt()
+        for (i in 0 until height) {
+            val indentBetween = indentLeft
+            indentLeft = (2.0.pow(height - 1 - i) - 1).toInt()
+            if (indentLeft < 0)
+                indentLeft = 0
+            var indent = " ".repeat(indentLeft * length)
             print(indent)
             for (string in strings[i]) {
-                indent = " ".repeat(length * (2.0.pow(height - i) - 1).toInt())
+                if (indentLeft == 0)
+                    indentLeft = 1
+                indent = " ".repeat(length * indentBetween)
                 print(string.padEnd(length).replace("_", "") + indent)
             }
+            println()
             println()
         }
     }

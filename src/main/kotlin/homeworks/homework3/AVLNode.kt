@@ -78,9 +78,9 @@ class AVLNode<K : Comparable<K>, V>(override var key: K, override var value: V) 
     }
 
     fun findNode(key: K): AVLNode<K, V>? {
-        return when (key.compareTo(key)) {
-            1 -> rightChild?.findNode(key)
-            -1 -> leftChild?.findNode(key)
+        return when {
+            key > this.key -> rightChild?.findNode(key)
+            key < this.key -> leftChild?.findNode(key)
             else -> this
         }
     }
@@ -97,9 +97,9 @@ class AVLNode<K : Comparable<K>, V>(override var key: K, override var value: V) 
     }
 
     fun removeNode(key: K): AVLNode<K, V>? {
-        when (key.compareTo(key)) {
-            1 -> rightChild?.removeNode(key)?.balance()
-            -1 -> leftChild?.removeNode(key)?.balance()
+        when {
+            key > this.key -> rightChild?.findNode(key)
+            key < this.key -> leftChild?.findNode(key)
             else -> {
                 return if (rightChild == null)
                     leftChild
