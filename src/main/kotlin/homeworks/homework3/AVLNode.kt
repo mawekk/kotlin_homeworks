@@ -6,8 +6,8 @@ import kotlin.math.max
 class AVLNode<K : Comparable<K>, V>(override var key: K, override var value: V) : MutableMap.MutableEntry<K, V> {
 
     companion object {
-        const val leftRotationCase = 2
-        const val rightRotationCase = -2
+        const val LEFT_ROTATION_CASE = 2
+        const val RIGHT_ROTATION_CASE = -2
     }
 
     var leftChild: AVLNode<K, V>? = null
@@ -61,13 +61,13 @@ class AVLNode<K : Comparable<K>, V>(override var key: K, override var value: V) 
     fun balance(): AVLNode<K, V> {
         updateHeight()
         return when (getBalanceFactor()) {
-            leftRotationCase -> {
+            LEFT_ROTATION_CASE -> {
                 val balanceFactor = rightChild?.getBalanceFactor()
                 if (balanceFactor != null && balanceFactor < 0)
                     rightChild = rightChild?.rotateRight()
                 rotateLeft()
             }
-            rightRotationCase -> {
+            RIGHT_ROTATION_CASE -> {
                 val balanceFactor = leftChild?.getBalanceFactor()
                 if (balanceFactor != null && balanceFactor > 0)
                     leftChild = leftChild?.rotateLeft()
