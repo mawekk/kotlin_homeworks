@@ -2,7 +2,6 @@ package homeworks.homework3
 
 import kotlin.math.max
 
-@Suppress("TooManyFunctions")
 class AVLNode<K : Comparable<K>, V>(override var key: K, override var value: V) : MutableMap.MutableEntry<K, V> {
     var height = 1
         private set
