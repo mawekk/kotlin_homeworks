@@ -1,147 +1,138 @@
 package homeworks.homework3
 
+import java.util.Collections.max
 import kotlin.math.pow
 
-@Suppress("TooManyFunctions")
+fun Int.pow(power: Int): Int = this.toDouble().pow(power).toInt()
+
 class AVLTree<K : Comparable<K>, V> : MutableMap<K, V> {
     private var root: AVLNode<K, V>? = null
+    private val nodeWorker = NodeWorker()
 
-    override val entries: MutableSet<MutableMap.MutableEntry<K, V>>
-        get() = traverse(root)
-    override val keys: MutableSet<K> = mutableSetOf()
-    override val values: MutableCollection<V> = mutableSetOf()
     override var size: Int = 0
         private set
 
-    override fun containsKey(key: K): Boolean {
-        return root?.findNode(key) != null
-    }
+    override val entries: MutableSet<MutableMap.MutableEntry<K, V>>
+        get() = root?.traverse() ?: mutableSetOf()
+    override val keys: MutableSet<K>
+        get() = entries.map { it.key }.toMutableSet()
+    override val values: MutableCollection<V>
+        get() = entries.map { it.value }.toMutableList()
 
-    override fun containsValue(value: V): Boolean {
-        return entries.find { it.value == value } != null
-    }
+    override fun containsKey(key: K): Boolean = keys.contains(key)
+
+    override fun containsValue(value: V): Boolean = values.contains(value)
 
     override fun get(key: K): V? = root?.findNode(key)?.value
 
-    override fun isEmpty(): Boolean = root == null
+    override fun isEmpty(): Boolean = size == 0
 
     override fun clear() {
         root = null
-    }
-
-    private fun putNode(node: AVLNode<K, V>?, key: K, value: V): AVLNode<K, V> {
-        if (node == null) {
-            size++
-            return AVLNode(key, value)
-        } else
-            when {
-                key > node.key -> node.rightChild = putNode(node.rightChild, key, value)
-                key < node.key -> node.leftChild = putNode(node.leftChild, key, value)
-                else -> node.setValue(value)
-            }
-        return node.balance()
+        size = 0
     }
 
     override fun put(key: K, value: V): V? {
-        root = putNode(root, key, value).balance()
+        root = nodeWorker.put(root, key, value).balance()
 
         return root?.value
     }
 
-    override fun putAll(from: Map<out K, V>) {
-        from.forEach { (put(it.key, it.value)) }
+    override fun putAll(from: Map<out K, V>) = from.forEach { put(it.key, it.value) }
+
+    override fun remove(key: K): V? {
+        root = nodeWorker.remove(root, key)
+
+        return root?.value
     }
 
-    private fun removeNode(node: AVLNode<K, V>?, key: K): AVLNode<K, V>? {
-        if (node != null) {
-            when {
-                key > node.key -> node.rightChild = removeNode(node.rightChild, key)
-                key < node.key -> node.leftChild = removeNode(node.leftChild, key)
-                else -> {
-                    return if (node.rightChild == null)
-                        node.leftChild
-                    else {
-                        val right = node.rightChild
-                        val left = node.leftChild
-                        val minimum = right?.findMinNode()
-                        minimum?.rightChild = right?.removeMinNode()
-                        minimum?.leftChild = left
-                        minimum?.balance()
+    override fun toString(): String = root?.let {
+        StringSerializer.serialize(it)
+    } ?: "empty tree"
+
+    private inner class NodeWorker {
+        fun remove(node: AVLNode<K, V>?, key: K): AVLNode<K, V>? {
+            if (node != null) {
+                when {
+                    key > node.key -> node.rightChild = remove(node.rightChild, key)
+                    key < node.key -> node.leftChild = remove(node.leftChild, key)
+                    else -> {
+                        size--
+
+                        return if (node.rightChild == null) {
+                            node.leftChild
+                        } else {
+                            val right = node.rightChild
+                            val left = node.leftChild
+                            val minimum = right?.minNode
+                            minimum?.rightChild = right?.removeMinNode()
+                            minimum?.leftChild = left
+                            minimum?.balance()
+                        }
                     }
                 }
             }
-        }
-        return node?.balance()
-    }
 
-    override fun remove(key: K): V? {
-        root = removeNode(root, key)
-        size--
-
-        return root?.value
-    }
-
-    private fun traverse(node: AVLNode<K, V>?): MutableSet<MutableMap.MutableEntry<K, V>> {
-        val set = mutableSetOf<MutableMap.MutableEntry<K, V>>()
-
-        return if (node != null) {
-            val left = node.leftChild
-            val right = node.rightChild
-
-            if (left != null)
-                set.addAll(traverse(left))
-            set.add(node)
-            if (right != null)
-                set.addAll(traverse(right))
-            set
-        } else mutableSetOf()
-    }
-
-    private fun splitIntoStrings(
-        node: AVLNode<K, V>?,
-        level: Int,
-        list: MutableList<MutableList<String>>
-    ): MutableList<MutableList<String>> {
-        if (node != null) {
-            list[level].add(node.toString())
-            splitIntoStrings(node.leftChild, level + 1, list)
-            splitIntoStrings(node.rightChild, level + 1, list)
-        } else
-            list[level].add("")
-        return list
-    }
-
-    fun printTree() {
-        val list = mutableListOf<MutableList<String>>()
-        val height = root?.height ?: throw IllegalArgumentException("nothing to print: tree is empty")
-        for (i in 0..height)
-            list.add(mutableListOf())
-        val strings = splitIntoStrings(root, 0, list)
-        strings.removeLast()
-        var length = 0
-
-        entries.forEach {
-            val node = AVLNode(it.key, it.value)
-            if (node.toString().length > length)
-                length = node.toString().length
+            return node?.balance()
         }
 
-        var indentLeft = (2.0.pow(height - 1) - 1).toInt()
-        for (i in 0 until height) {
-            val indentBetween = indentLeft
-            indentLeft = (2.0.pow(height - 1 - i) - 1).toInt()
-            if (indentLeft < 0)
-                indentLeft = 0
-            var indent = " ".repeat(indentLeft * length)
-            print(indent)
-            for (string in strings[i]) {
-                if (indentLeft == 0)
-                    indentLeft = 1
-                indent = " ".repeat(length * indentBetween)
-                print(string.padEnd(length) + indent)
+        fun put(node: AVLNode<K, V>?, key: K, value: V): AVLNode<K, V> {
+            if (node == null) {
+                size++
+
+                return AVLNode(key, value)
             }
-            println()
-            println()
+
+            when {
+                key > node.key -> node.rightChild = put(node.rightChild, key, value)
+                key < node.key -> node.leftChild = put(node.leftChild, key, value)
+                else -> node.setValue(value)
+            }
+
+            return node.balance()
+        }
+    }
+
+    object StringSerializer {
+        fun <K : Comparable<K>, V> serialize(root: AVLNode<K, V>): String {
+            val resultBuffer = StringBuilder()
+
+            val levels = MutableList(root.height) { mutableListOf<String>() }.apply { splitToLevels(root, 0, this) }
+            val maxNodeLength = max(root.traverse().map { it.toString().length })
+
+            var indentLeft = 2.pow(root.height - 1) - 1
+            levels.forEachIndexed { i, level ->
+                val indentBetween = indentLeft
+
+                indentLeft = 2.pow(root.height - 1 - i) - 1
+                if (indentLeft < 0) {
+                    indentLeft = 1
+                }
+
+                resultBuffer.append(" ".repeat(indentLeft * maxNodeLength))
+                for (node in level) {
+                    resultBuffer.append(node.padEnd(maxNodeLength))
+                    resultBuffer.append(" ".repeat(maxNodeLength * indentBetween))
+                }
+
+                resultBuffer.append("\n\n")
+            }
+
+            return resultBuffer.toString()
+        }
+
+        private fun <K : Comparable<K>, V> splitToLevels(
+            node: AVLNode<K, V>?,
+            level: Int,
+            list: MutableList<MutableList<String>>
+        ) {
+            if (node != null) {
+                list[level].add(node.toString())
+                splitToLevels(node.leftChild, level + 1, list)
+                splitToLevels(node.rightChild, level + 1, list)
+            } else if (level < list.size) {
+                list[level].add("")
+            }
         }
     }
 }

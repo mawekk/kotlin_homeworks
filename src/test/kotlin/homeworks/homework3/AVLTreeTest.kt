@@ -3,11 +3,11 @@ package homeworks.homework3
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Test
 
-internal class AVLTreeKtTest {
+internal class AVLTreeTest {
     @Test
     fun `put test`() {
         val tree = AVLTree<Int, Int>()
-        tree.put(1, 2)
+        tree[1] = 2
         assertEquals(mutableMapOf(1 to 2).entries, tree.entries)
     }
 
@@ -32,7 +32,7 @@ internal class AVLTreeKtTest {
     @Test
     fun `get test`() {
         val tree = AVLTree<Int, Int>()
-        tree.put(1, 2)
+        tree[1] = 2
         assertEquals(2, tree.get(1))
         assertEquals(null, tree.get(2))
     }
@@ -41,14 +41,14 @@ internal class AVLTreeKtTest {
     fun `isEmpty test`() {
         val tree = AVLTree<Int, Int>()
         assertEquals(true, tree.isEmpty())
-        tree.put(1, 2)
+        tree[1] = 2
         assertEquals(false, tree.isEmpty())
     }
 
     @Test
     fun `clear test`() {
         val tree = AVLTree<Int, Int>()
-        tree.put(1, 2)
+        tree[1] = 2
         assertEquals(mutableMapOf(1 to 2).entries, tree.entries)
         tree.clear()
         assertEquals(emptyMap<Int, Int>().entries, tree.entries)

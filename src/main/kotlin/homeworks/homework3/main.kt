@@ -19,5 +19,5 @@ fun main() {
         31 to "ribbit"
     )
     tree.putAll(map)
-    tree.printTree()
+    print(tree)
 }
