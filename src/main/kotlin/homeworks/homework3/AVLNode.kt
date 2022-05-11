@@ -75,9 +75,7 @@ class AVLNode<K : Comparable<K>, V>(override var key: K, override var value: V) 
         return oldValue
     }
 
-    override fun toString(): String {
-        return key.toString() + " -> " + value.toString()
-    }
+    override fun toString(): String = key.toString() + " -> " + value.toString()
 
     private fun updateHeight() {
         val leftHeight = leftChild?.height ?: 0

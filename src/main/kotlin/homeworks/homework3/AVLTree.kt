@@ -5,6 +5,9 @@ import kotlin.math.pow
 
 fun Int.pow(power: Int): Int = this.toDouble().pow(power).toInt()
 
+fun <K : Comparable<K>, V> avlTreeOf(vararg pairs: Pair<K, V>): MutableMap<K, V> =
+    AVLTree<K, V>().apply { putAll(pairs) }
+
 class AVLTree<K : Comparable<K>, V> : MutableMap<K, V> {
     private var root: AVLNode<K, V>? = null
     private val nodeWorker = NodeWorker()
@@ -19,7 +22,7 @@ class AVLTree<K : Comparable<K>, V> : MutableMap<K, V> {
     override val values: MutableCollection<V>
         get() = entries.map { it.value }.toMutableList()
 
-    override fun containsKey(key: K): Boolean = keys.contains(key)
+    override fun containsKey(key: K): Boolean = this[key] != null
 
     override fun containsValue(value: V): Boolean = values.contains(value)
 
@@ -124,14 +127,14 @@ class AVLTree<K : Comparable<K>, V> : MutableMap<K, V> {
         private fun <K : Comparable<K>, V> splitToLevels(
             node: AVLNode<K, V>?,
             level: Int,
-            list: MutableList<MutableList<String>>
+            levels: MutableList<MutableList<String>>
         ) {
             if (node != null) {
-                list[level].add(node.toString())
-                splitToLevels(node.leftChild, level + 1, list)
-                splitToLevels(node.rightChild, level + 1, list)
-            } else if (level < list.size) {
-                list[level].add("")
+                levels[level].add(node.toString())
+                splitToLevels(node.leftChild, level + 1, levels)
+                splitToLevels(node.rightChild, level + 1, levels)
+            } else if (level < levels.size) {
+                levels[level].add("")
             }
         }
     }
