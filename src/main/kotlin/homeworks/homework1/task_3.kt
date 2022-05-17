@@ -1,4 +1,4 @@
-package homework.homework1
+package homeworks.homework1
 
 fun main() {
     val greeting = """

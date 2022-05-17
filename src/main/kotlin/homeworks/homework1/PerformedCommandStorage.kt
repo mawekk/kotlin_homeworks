@@ -1,4 +1,4 @@
-package homework.homework1
+package homeworks.homework1
 
 class PerformedCommandStorage {
     private val storage: MutableList<Action> = mutableListOf()

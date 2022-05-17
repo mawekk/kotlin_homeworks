@@ -1,4 +1,4 @@
-package homework.homework1
+package homeworks.homework1
 
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Test
