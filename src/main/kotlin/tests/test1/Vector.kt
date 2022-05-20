@@ -38,6 +38,7 @@ class Vector<T : ArithmeticAvailable<T>>(val elements: List<T>) {
     }
 
     val isZeroVector: Boolean
-        get() = elements.all { it.element.isZero()}
+        get() = elements.all { it.isZero() } || elements.isEmpty()
 
+    override fun toString(): String = elements.toString()
 }
