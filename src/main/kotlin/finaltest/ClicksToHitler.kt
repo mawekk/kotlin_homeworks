@@ -6,11 +6,31 @@ import io.ktor.client.plugins.HttpTimeout
 import io.ktor.client.request.get
 import io.ktor.client.statement.HttpResponse
 import io.ktor.client.statement.bodyAsText
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.runBlocking
 import org.jsoup.Jsoup
 
 const val HITLER_PAGE = "https://en.wikipedia.org/wiki/Adolf_Hitler"
+
+@OptIn(ExperimentalCoroutinesApi::class)
+fun playGame(url: String, depth: Int, nProcess: Int) {
+    val page = runBlocking { getPage(url) }
+    val links = getLinks(page)
+    val map = mapOf(url to links)
+    val path = runBlocking(Dispatchers.Default.limitedParallelism(nProcess)) {
+        findHitler(map, depth, mutableListOf())
+    }.reversed()
+    println("")
+    if (path == emptyList<String>()) {
+        println("Adolf wasn't found :(")
+    } else {
+        println("And here's Adolf!")
+        println(path.joinToString(separator = " -> ") + " -> " + HITLER_PAGE)
+    }
+}
 
 suspend fun getPage(url: String): String {
     val client = HttpClient(CIO) {
@@ -37,6 +57,8 @@ suspend fun findHitler(
 ): MutableList<String> = coroutineScope {
     print(".")
     if (depth == 0)
+        return@coroutineScope path
+    if (links.keys.contains(HITLER_PAGE))
         return@coroutineScope path
     var parent: String? = null
     links.forEach {
